@@ -17,9 +17,9 @@ export const appConfig: ApplicationConfig = {
 Con esta estrategia las rutas viven después del símbolo `#`, por ejemplo:
 
 ```
-https://ingdavidmora2005.github.io/lab-pipelines-hash/#/inicio
-https://ingdavidmora2005.github.io/lab-pipelines-hash/#/proyectos
-https://ingdavidmora2005.github.io/lab-pipelines-hash/#/contacto
+https://juanpablo-devia.github.io/lab-pipelines-hash/#/inicio
+https://juanpablo-devia.github.io/lab-pipelines-hash/#/proyectos
+https://juanpablo-devia.github.io/lab-pipelines-hash/#/contacto
 ```
 
 ### ¿Por qué no necesita configuración especial en GitHub Pages?
@@ -45,7 +45,7 @@ La navegación entre vistas se hace con `routerLink` y `routerLinkActive` desde 
 
 ## URL pública
 
-https://ingdavidmora2005.github.io/lab-pipelines-hash/
+https://juanpablo-devia.github.io/lab-pipelines-hash/
 
 ## Cómo correrlo en local
 
@@ -66,6 +66,7 @@ El workflow está en [`.github/workflows/deploy-github-pages.yml`](.github/workf
 
 - `push` a la rama `master` (es decir, cada vez que se fusiona un Pull Request).
 - `workflow_dispatch`: ejecución manual desde la pestaña _Actions_.
+- `pull_request` hacia `master`: ejecuta pruebas y build para validar el cambio, **sin desplegar**.
 
 Permisos: `contents: read`, `pages: write` e `id-token: write`. Usa `concurrency` con el grupo `pages` (sin cancelar despliegues en curso).
 
@@ -86,6 +87,13 @@ Permisos: `contents: read`, `pages: write` e `id-token: write`. Usa `concurrency
 ### Job `deploy`
 
 Depende de `build` (`needs: build`) y publica el artefacto en el entorno `github-pages` con `actions/deploy-pages@v4`. La URL resultante queda expuesta como salida del paso de despliegue.
+
+
+No se ejecuta en pull requests: solo despliega cuando el cambio ya está en `master`.
+
+### Job `verify`
+
+Depende de `deploy` y comprueba que la aplicación quedó disponible: hace una petición a la URL publicada (hasta 10 intentos, cada 10 segundos) y exige que responda con estado **200** y que el HTML contenga `<app-root>`. Si no se cumple, el pipeline queda en rojo.
 
 ### ¿Se copia `index.html` a `404.html`?
 
@@ -157,5 +165,8 @@ Ambas se cargan desde Google Fonts en `src/index.html`.
 - David Mora Duque
 - Juan Pablo Devia
 - Juan Diego Rodriguez
+
+
+Repositorio original del equipo: https://github.com/INGDavidMora2005/lab-pipelines-hash
 
 **Docente:** Jesus David Mejia Vergara · Arquitectura de Software · UCEVA
