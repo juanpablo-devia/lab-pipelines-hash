@@ -43,9 +43,6 @@ jobs:
       - name: Build de Angular
         run: npx ng build --configuration production --base-href "/${{ github.event.repository.name }}/"
 
-      - name: Fallback para rutas de Angular
-        run: cp dist/lab-pipelines-hash/browser/index.html dist/lab-pipelines-hash/browser/404.html
-
       - name: Subir artefacto
         uses: actions/upload-pages-artifact@v3
         with:
